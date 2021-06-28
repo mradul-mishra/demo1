@@ -1,0 +1,31 @@
+trigger:
+- main
+
+pool:
+  name: Azure Pipelines
+  vmImage: 'vs2017-win2016'
+  
+steps:
+- task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+  displayName: 'Use Terraform latest'
+
+- task: tylerevert.Vsts-Release-Terraform.Vsts-Release-Terraform.Terraform@1
+  displayName: 'Terraform : INIT'
+  inputs:
+    backendServiceArm: 'mraduldmishra-sample-5399860c-26aa-4e23-aab9-c80f3139370b'
+    backendAzureRmResourceGroupName: 'cloud-shell-storage-centralindia'
+    backendAzureRmStorageAccountName: demostorage00000
+    backendAzureRmContainerName: tstate
+    backendAzureRmKey: 'wcN/QWuf2CdQ0xBpCUoKFIYdE3BBj7JijLsS3Mnq1g8kyrJHuxqzcAZAw5cuYxyYjFPMkuJu1Zw0Nnd4ZVFLEw=='
+
+- task: tylerevert.Vsts-Release-Terraform.Vsts-Release-Terraform.Terraform@1
+  displayName: 'Terraform : PLAN'
+  inputs:
+    command: plan
+    environmentServiceNameAzureRM: 'mraduldmishra-sample-5399860c-26aa-4e23-aab9-c80f3139370b'
+
+- task: tylerevert.Vsts-Release-Terraform.Vsts-Release-Terraform.Terraform@1
+  displayName: 'Terraform : VAL & APPLY'
+  inputs:
+    command: apply
+    environmentServiceNameAzureRM: 'mraduldmishra-sample-5399860c-26aa-4e23-aab9-c80f3139370b'
